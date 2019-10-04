@@ -5,14 +5,15 @@ node_js:
 cache: npm
 branches:
   only:
-    - master # build master branch only
+    - source # build master branch only
+install:
+  - npm install
+  - npm install hexo-deployer-git --save
 script:
+  - hexo clean
   - hexo generate # generate static files
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GH_TOKEN
-  keep-history: true
-  on:
-    branch: master
-  local-dir: public
+after_script:
+  - git config user.name "windniw"
+  - git config user.email "windniw36@gmial.com"
+  - sed -i "s/gh_token/${GH_TOKEN}/g" ./_config.yml
+  - hexo deploy
