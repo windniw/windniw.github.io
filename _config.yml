@@ -80,4 +80,4 @@ theme: landscape
 deploy:
 - type: git
   repo: https://gh_token@github.com/windniw/windniw.github.io.git
-  branch: master
+  branch: gh-pages
