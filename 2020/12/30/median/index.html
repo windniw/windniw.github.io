@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon/moon.png">
+  <link rel="icon" type="image/png" href="/img/icon/moon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content>
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content>
+  <title>中位数在线算法 - Brünhild</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css">
+  <link rel="stylesheet" href="/lib/hint/hint.min.css">
+
+  
+    
+    
+      
+      <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css">
+    
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":false,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Brünhild</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/bg/sky.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="中位数在线算法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-30 23:31" pubdate>
+        December 30, 2020 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">中位数在线算法</h1>
+            
+            <div class="markdown-body">
+              <p>动态返回输入序列的中位数。</p>
+<a id="more"></a>
+
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>中位数的离线算法没有任何难度，排序取中位元素即可，但在线算法并没有这么直观。显然，这个问题在不卡输入数据的情况下，不可能通过动态规划等思路压缩状态来降低时间的消耗，则需要在插入时维护已有数据集，来加速查找中位数的操作。那么对一个在线的算法需要考虑的操作需包括：</p>
+<ul>
+<li>查找插入位置</li>
+<li>插入</li>
+<li>查找中位数</li>
+</ul>
+<p>可以简单考虑下几种常用数据结构能否直接满足此诉求</p>
+<ul>
+<li>链表</li>
+</ul>
+<p>寻找插入点 $O(n)$，插入 $O(1)$，查找中位点 $O(n)$。</p>
+<p>一种可能的优化点：由于每次仅插入一个元素，取 p 常驻于中点，根据插入点在 p 的左右，相应移动 p 维护其中点位置，可以将查找优化到 $O(1)$。</p>
+<ul>
+<li>数组</li>
+</ul>
+<p>寻找插入点 $O(log_2(n))$，插入 $O(n)$，查找中位点 $O(1)$。</p>
+<ul>
+<li>堆</li>
+</ul>
+<p>寻找插入点 $O(log_2(n))$，插入 $O(log_2(n))$，查找中位点 $O(log_2(n)*n)$ (先 pop 一半再 push 回去)。</p>
+<ul>
+<li>排序树</li>
+</ul>
+<p>寻找插入点 $O(log_2(n))$，插入 $O(1)$，查找中位点 $O(n)$。</p>
+<p>一种可能的优化点：对每个节点维护其子节点个数，在树的旋转时维护该值，可以将查找优化到 $O(log_2(n))$</p>
+<p>另一种可能的优化点：类似上面提到的链表优化，先取 p 常驻于中点，根据插入点维护 p 的中点位置，可以将查找优化到 $O(1)$</p>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>显然，上面几个思路中，只有通过排序树的搞法是最优的。但在实际实现中，依赖具体语言的容器类是否支持此类操作，否则还需要自行实现一棵排序树。一般而言，会使用另外一种更通用便于实现的方法。</p>
+<p><strong>大顶堆 + 小顶堆</strong></p>
+<p>每次插入元素时，维护两个容量相差不大于 1 的大顶堆和小顶堆，且满足对于小顶堆中每个元素，均大于或等于大顶堆的每个元素。执行以下算法：</p>
+<pre><code class="hljs python">add k:
+  <span class="hljs-comment"># 新元素 k 与两堆顶元素比较，加入满足要求的一个堆</span>
+  <span class="hljs-keyword">if</span> k &gt; max_heap.top:
+      max_heap.push(k)
+  <span class="hljs-keyword">else</span>:
+      min_heap.push(k)
+  <span class="hljs-comment"># 调整两个堆的大小直至相差在 1 以内</span>
+  <span class="hljs-keyword">while</span> max_heap.len + <span class="hljs-number">1</span> &lt; min_heap.len:
+      max_heap.push(min_heap.pop) 
+  <span class="hljs-keyword">while</span> min_heap.len + <span class="hljs-number">1</span> &lt; max_heap.len:
+      min_heap.push(max_heap.pop)</code></pre>
+
+<p>注意在每次添加完元素后，都需要调整两个堆的元素。且由于之前插入时已经调整过一次，那么每次至多两个堆各调整一次即可重新平衡，插入元素时间复杂度为 $O(log_2n)$。</p>
+<p>而对于查找中位数，显然有中位数必然为两堆顶之一，或两堆顶的平均数，时间复杂度 $O(1)$。</p>
+<p>在此，我们通过两道题目来解决这个问题。</p>
+<h2 id="数据流的中位数"><a href="#数据流的中位数" class="headerlink" title="数据流的中位数"></a>数据流的中位数</h2><blockquote>
+<p><a href="https://leetcode-cn.com/problems/find-median-from-data-stream" target="_blank" rel="noopener">295. 数据流的中位数</a></p>
+<p>初始数组为空，持续向数组添加元素，并随时返回其中位数。</p>
+</blockquote>
+<p>标准题目，思路如上所述，以 <code>add 5, 10, 20, 30</code> 为例，流程见下图</p>
+<p><img src="/img/median_0.png" alt="295_flow"></p>
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Heap</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.data = []
+        self.k = <span class="hljs-number">1</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">max_heap</span><span class="hljs-params">(self)</span>:</span>
+        self.k = <span class="hljs-number">-1</span>
+        <span class="hljs-keyword">return</span> self
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">top</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.data[<span class="hljs-number">0</span>] * self.k
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pop</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.k * heapq.heappop(self.data)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">push</span><span class="hljs-params">(self, item)</span>:</span>
+        <span class="hljs-keyword">return</span> heapq.heappush(self.data, item * self.k)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">len</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> len(self.data)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">empty</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> len(self.data) == <span class="hljs-number">0</span>
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MedianFinder</span>:</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.min_part = Heap().max_heap()
+        self.max_part = Heap()
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">addNum</span><span class="hljs-params">(self, num: int)</span> -&gt; <span class="hljs-keyword">None</span>:</span>
+        m1, m2 = self.min_part, self.max_part
+        m1.push(num) <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> m1.empty() <span class="hljs-keyword">and</span> num &lt; m2.top() <span class="hljs-keyword">else</span> m2.push(num)
+        <span class="hljs-keyword">while</span> m2.len() &gt; m1.len() + <span class="hljs-number">1</span>:
+            m1.push(m2.pop())
+        <span class="hljs-keyword">while</span> m1.len() &gt; m2.len() + <span class="hljs-number">1</span>:
+            m2.push(m1.pop())
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">findMedian</span><span class="hljs-params">(self)</span> -&gt; float:</span>
+        l1, l2 = self.min_part.len(), self.max_part.len()
+        <span class="hljs-keyword">if</span> l1 &gt; l2:
+            <span class="hljs-keyword">return</span> self.min_part.top()
+        <span class="hljs-keyword">elif</span> l1 &lt; l2:
+            <span class="hljs-keyword">return</span> self.max_part.top()
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-keyword">return</span> (self.min_part.top() + self.max_part.top()) / <span class="hljs-number">2</span></code></pre>
+
+<h2 id="滑动窗口中位数"><a href="#滑动窗口中位数" class="headerlink" title="滑动窗口中位数"></a>滑动窗口中位数</h2><blockquote>
+<p><a href="https://leetcode-cn.com/problems/sliding-window-median" target="_blank" rel="noopener">480. 滑动窗口中位数</a></p>
+<p>给定数组 nums 与窗口大小 k，求数组从左向右每个窗口的中位数</p>
+</blockquote>
+<p>大的思路不变，还是维护双堆。与 <strong>295</strong> 相比，多了一个窗口限制，即不能只考虑向两个堆中加元素，还得考虑移除的情况。然而，从堆中挪走一个特定元素时间复杂度为 $O(nlog_2n)$。若每次窗口滑动时，都去即时移除堆中元素，复杂度会直接退化到维护一个堆的做法。考虑到在本题的要求下，即时移除元素是不必要的操作，因为要求的是中位数，若同时向两个堆中塞入不等于堆顶的元素，中位数不改变。也就是说，不在堆顶的元素实际上不影响我们对中位数的求解，可以做延迟删除。</p>
+<p>引入<code>balance</code> 变量来记录<strong>实际</strong>上大顶堆比小顶堆多的元素数量，每次用 <code>multiset</code> 来记录移除元素。思路类似，每次调整到 <code>0 &lt;= balance &lt;= 1</code>，调整策略为若堆顶元素为已删除元素，直接抛出，否则在两堆间迁移直至平衡。 </p>
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Heap</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.data = []
+        self.k = <span class="hljs-number">1</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">max_heap</span><span class="hljs-params">(self)</span>:</span>
+        self.k = <span class="hljs-number">-1</span>
+        <span class="hljs-keyword">return</span> self
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">top</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.data[<span class="hljs-number">0</span>] * self.k
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">pop</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> self.k * heapq.heappop(self.data)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">push</span><span class="hljs-params">(self, item)</span>:</span>
+        <span class="hljs-keyword">return</span> heapq.heappush(self.data, item * self.k)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">len</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> len(self.data)
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">empty</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-keyword">return</span> len(self.data) == <span class="hljs-number">0</span>
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MultiSet</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self)</span>:</span>
+        self.data = &#123;&#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add</span><span class="hljs-params">(self, x)</span>:</span>
+        <span class="hljs-keyword">if</span> x <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> self.data:
+            self.data[x] = <span class="hljs-number">0</span>
+        self.data[x] += <span class="hljs-number">1</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">remove</span><span class="hljs-params">(self, x)</span>:</span>
+        self.data[x] -= <span class="hljs-number">1</span>
+        <span class="hljs-keyword">if</span> self.data[x] == <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">del</span> (self.data[x])
+
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">contains</span><span class="hljs-params">(self, x)</span> -&gt; bool:</span>
+        <span class="hljs-keyword">return</span> x <span class="hljs-keyword">in</span> self.data
+
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">medianSlidingWindow</span><span class="hljs-params">(self, nums: List[int], k: int)</span> -&gt; List[float]:</span>
+        res, m1, m2, cache, balance = [], Heap().max_heap(), Heap(), MultiSet(), <span class="hljs-number">0</span>
+        <span class="hljs-keyword">for</span> i, x <span class="hljs-keyword">in</span> enumerate(nums):
+            <span class="hljs-keyword">if</span> m1.empty() <span class="hljs-keyword">or</span> x &lt;= m1.top():
+                m1.push(x)
+                balance += <span class="hljs-number">1</span>
+            <span class="hljs-keyword">else</span>:
+                m2.push(x)
+                balance -= <span class="hljs-number">1</span>
+            <span class="hljs-keyword">if</span> i &gt;= k:
+                cache.add(nums[i - k])
+                balance += <span class="hljs-number">-1</span> <span class="hljs-keyword">if</span> nums[i - k] &lt;= m1.top() <span class="hljs-keyword">else</span> <span class="hljs-number">1</span>
+            <span class="hljs-keyword">while</span> balance != <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> balance != <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> m1.empty() <span class="hljs-keyword">and</span> cache.contains(
+                    m1.top()) <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> m2.empty() <span class="hljs-keyword">and</span> cache.contains(
+                    m2.top()):
+                <span class="hljs-keyword">if</span> balance &gt; <span class="hljs-number">1</span>:
+                    m2.push(m1.pop())
+                    balance -= <span class="hljs-number">2</span>
+                <span class="hljs-keyword">if</span> balance &lt; <span class="hljs-number">0</span>:
+                    m1.push(m2.pop())
+                    balance += <span class="hljs-number">2</span>
+                <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> m1.empty() <span class="hljs-keyword">and</span> cache.contains(m1.top()):
+                    cache.remove(m1.pop())
+                <span class="hljs-keyword">while</span> <span class="hljs-keyword">not</span> m2.empty() <span class="hljs-keyword">and</span> cache.contains(m2.top()):
+                    cache.remove(m2.pop())
+            <span class="hljs-keyword">if</span> i &gt;= k - <span class="hljs-number">1</span>:
+                <span class="hljs-keyword">if</span> balance == <span class="hljs-number">0</span>:
+                    res.append((m1.top() + m2.top()) / <span class="hljs-number">2</span>)
+                <span class="hljs-keyword">else</span>:
+                    res.append(m1.top() <span class="hljs-keyword">if</span> balance == <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> m2.top())
+        <span class="hljs-keyword">return</span> res</code></pre>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/algorithm/">algorithm</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/20/max_matrix_sum/">
+                        <span class="hidden-mobile">最大矩阵和问题</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

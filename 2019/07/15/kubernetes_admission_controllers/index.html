@@ -1,0 +1,611 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon/moon.png">
+  <link rel="icon" type="image/png" href="/img/icon/moon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content>
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content>
+  <title>Kubernetes Admission Controllers - Brünhild</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css">
+  <link rel="stylesheet" href="/lib/hint/hint.min.css">
+
+  
+    
+    
+      
+      <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css">
+    
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","version":"1.8.5","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"copy_btn":true,"image_zoom":{"enable":true},"lazyload":{"enable":false,"onlypost":false},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Brünhild</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/bg/sky.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Kubernetes Admission Controllers">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-07-15 10:00" pubdate>
+        July 15, 2019 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes Admission Controllers</h1>
+            
+            <div class="markdown-body">
+              <p><strong>Kubernetes Admission Controllers</strong> 提供了一个资源创建，修改流程的切面，可以通过<code>kube-apiserver</code>启动参数进行配置。</p>
+<a id="more"></a>
+
+<p class="note note-primary">以下分析仅基于 Kubernetes:1.13 </p>
+
+<p>从来源而言，可分为静态钩子和动态钩子，前者指的是<code>kubernetes</code>提供的原生能力，代码直接编译在<code>kube-apiserver</code>二进制中，后者即两个<code>webhook</code>。从功能而言，可分为<code>validating</code>和<code>mutating</code>，前者只做校验，后者会修改或补充资源中的信息。</p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p><strong>Admission Controller</strong> 的开关分为以下三部分</p>
+<h2 id="default"><a href="#default" class="headerlink" title="default"></a>default</h2><p>无需任何配置，默认打开</p>
+<pre><code class="hljs bash">kube-apiserver -h | grep <span class="hljs-built_in">enable</span>-admission-plugin
+&gt;&gt; admission plugins that should be enabled <span class="hljs-keyword">in</span> addition to default enabled ones (NamespaceLifecycle, LimitRanger, ServiceAccount, TaintNodesByCondition, Priority, DefaultTolerationSeconds, DefaultStorageClass, PersistentVolumeClaimResize, MutatingAdmissionWebhook, ValidatingAdmissionWebhook, ResourceQuota). Comma-delimited list of admission plugins: AlwaysAdmit, AlwaysDeny, AlwaysPullImages, DefaultStorageClass, DefaultTolerationSeconds, DenyEscalatingExec, DenyExecOnPrivileged, EnableIpv6, EventRateLimit, ExtendedResourceToleration, ImagePolicyWebhook, IngressAnnotations, Initializers, LimitPodHardAntiAffinityTopology, LimitRanger, MutatingAdmissionWebhook, NamespaceAutoProvision, NamespaceExists, NamespaceLifecycle, NodeRestriction, OwnerReferencesPermissionEnforcement, PersistentVolumeAnnotations, PersistentVolumeClaimResize, PersistentVolumeLabel, PodNodeSelector, PodPreset, PodSecurityPolicy, PodTolerationRestriction, Priority, ResourceQuota, SecurityContextDeny, ServiceAccount, ServiceAnnotations, StorageObjectInUseProtection, TaintNodesByCondition, ValidatingAdmissionWebhook. The order of plugins <span class="hljs-keyword">in</span> this flag does not matter.</code></pre>
+
+<h2 id="enable"><a href="#enable" class="headerlink" title="enable"></a>enable</h2><p>在 <strong>Admission Controller</strong> 列表中但不在default里，手动开启</p>
+<pre><code class="hljs bash">kube-apiserver --<span class="hljs-built_in">enable</span>-admission-plugins=NamespaceLifecycle,LimitRanger</code></pre>
+
+<h2 id="disable"><a href="#disable" class="headerlink" title="disable"></a>disable</h2><p>在 <strong>Admission Controller</strong> 列表中，但不需要，手动关闭</p>
+<pre><code class="hljs undefined">kube-apiserver <span class="hljs-attribute">--disable-admission-plugins</span>=NamespaceLifecycle,LimitRanger</code></pre>
+
+<p>以上两个配置，控制器的先后顺序没有区别</p>
+<p>实际上的先后顺序是在编译时决定的，可参见以下文件内容</p>
+<pre><code class="hljs go"><span class="hljs-comment">// k8s.io/kubernetes/pkg/kubeapiserver/options/plugins.go</span>
+
+<span class="hljs-comment">// AllOrderedPlugins is the list of all the plugins in order.</span>
+<span class="hljs-keyword">var</span> AllOrderedPlugins = []<span class="hljs-keyword">string</span>&#123;
+	admit.PluginName,                        <span class="hljs-comment">// AlwaysAdmit</span>
+	autoprovision.PluginName,                <span class="hljs-comment">// NamespaceAutoProvision</span>
+	lifecycle.PluginName,                    <span class="hljs-comment">// NamespaceLifecycle</span>
+	exists.PluginName,                       <span class="hljs-comment">// NamespaceExists</span>
+	scdeny.PluginName,                       <span class="hljs-comment">// SecurityContextDeny</span>
+	antiaffinity.PluginName,                 <span class="hljs-comment">// LimitPodHardAntiAffinityTopology</span>
+	podpreset.PluginName,                    <span class="hljs-comment">// PodPreset</span>
+	limitranger.PluginName,                  <span class="hljs-comment">// LimitRanger</span>
+	serviceaccount.PluginName,               <span class="hljs-comment">// ServiceAccount</span>
+	noderestriction.PluginName,              <span class="hljs-comment">// NodeRestriction</span>
+	nodetaint.PluginName,                    <span class="hljs-comment">// TaintNodesByCondition</span>
+	alwayspullimages.PluginName,             <span class="hljs-comment">// AlwaysPullImages</span>
+	enableipv6.PluginName,                   <span class="hljs-comment">// EnableIpv6</span>
+	imagepolicy.PluginName,                  <span class="hljs-comment">// ImagePolicyWebhook</span>
+	podsecuritypolicy.PluginName,            <span class="hljs-comment">// PodSecurityPolicy</span>
+	podnodeselector.PluginName,              <span class="hljs-comment">// PodNodeSelector</span>
+	podpriority.PluginName,                  <span class="hljs-comment">// Priority</span>
+	defaulttolerationseconds.PluginName,     <span class="hljs-comment">// DefaultTolerationSeconds</span>
+	podtolerationrestriction.PluginName,     <span class="hljs-comment">// PodTolerationRestriction</span>
+	exec.DenyEscalatingExec,                 <span class="hljs-comment">// DenyEscalatingExec</span>
+	exec.DenyExecOnPrivileged,               <span class="hljs-comment">// DenyExecOnPrivileged</span>
+	eventratelimit.PluginName,               <span class="hljs-comment">// EventRateLimit</span>
+	extendedresourcetoleration.PluginName,   <span class="hljs-comment">// ExtendedResourceToleration</span>
+	label.PluginName,                        <span class="hljs-comment">// PersistentVolumeLabel</span>
+	setdefault.PluginName,                   <span class="hljs-comment">// DefaultStorageClass</span>
+	storageobjectinuseprotection.PluginName, <span class="hljs-comment">// StorageObjectInUseProtection</span>
+	gc.PluginName,                           <span class="hljs-comment">// OwnerReferencesPermissionEnforcement</span>
+	resize.PluginName,                       <span class="hljs-comment">// PersistentVolumeClaimResize</span>
+	mutatingwebhook.PluginName,              <span class="hljs-comment">// MutatingAdmissionWebhook</span>
+	initialization.PluginName,               <span class="hljs-comment">// Initializers</span>
+	validatingwebhook.PluginName,            <span class="hljs-comment">// ValidatingAdmissionWebhook</span>
+	resourcequota.PluginName,                <span class="hljs-comment">// ResourceQuota</span>
+	deny.PluginName,                         <span class="hljs-comment">// AlwaysDeny</span>
+	annotation.PluginName,                   <span class="hljs-comment">// PersistentVolumeAnnotations</span>
+	serviceannotation.PluginName,            <span class="hljs-comment">// ServiceAnnotations</span>
+	ingressannotation.PluginName,            <span class="hljs-comment">// IngressAnnotations</span>
+&#125;</code></pre>
+
+<h1 id="支持列表"><a href="#支持列表" class="headerlink" title="支持列表"></a>支持列表</h1><h2 id="废弃"><a href="#废弃" class="headerlink" title="废弃"></a>废弃</h2><p><strong>AlwaysAdmit</strong> [deprecated]</p>
+<p>不检查，直接放行，等于没配。</p>
+<p><strong>AlwaysDeny</strong> [deprecated]</p>
+<p>直接拒绝，没有使用场景。</p>
+<p><strong>DenyExecOnPrivileged</strong> [deprecated]</p>
+<p>禁止了对特权容器的 <code>exec</code> 操作，功能雷同，建议使用 <strong>DenyEscalatingExec</strong> 。</p>
+<p><strong>DenyEscalatingExec</strong> [deprecated]</p>
+<p>禁止了对特权容器的<code>exec</code>和<code>attach</code>操作，否则可以借此绕过操作系统验证，获取节点上的极大操作权限。建议改用 <strong>PodSecurityPolicy</strong> 做更精准的限制。</p>
+<p><strong>PersistentVolumeLabel</strong> [deprecated]</p>
+<p>自动给<code>pv</code>和<code>pod</code>打<code>label</code>，防止其创建到不同<code>region</code>上去。</p>
+<p>怎么看都觉得这种是各个云服务提供商应该操心的事，不应该在主线分支里提供这种东西，被废弃也理所当然吧。</p>
+<h2 id="可靠性"><a href="#可靠性" class="headerlink" title="可靠性"></a>可靠性</h2><p><strong>TaintNodesByCondition</strong></p>
+<p>依据<code>node.condition</code>给<code>node</code>自动打<code>taint</code>。</p>
+<p><strong>DefaultTolerationSeconds</strong></p>
+<p>为所有<code>pod</code>添加以下<code>toleration</code>，如果已有相同<code>key</code>值不会覆盖</p>
+<pre><code class="hljs yaml"><span class="hljs-attr">tolerations:</span>
+<span class="hljs-attr">- effect:</span> <span class="hljs-string">NoExecute</span>
+<span class="hljs-attr">  key:</span> <span class="hljs-string">node.kubernetes.io/not-ready</span>
+<span class="hljs-attr">  operator:</span> <span class="hljs-string">Exists</span>
+<span class="hljs-attr">  tolerationSeconds:</span> <span class="hljs-number">300</span>
+<span class="hljs-attr">- effect:</span> <span class="hljs-string">NoExecute</span>
+<span class="hljs-attr">  key:</span> <span class="hljs-string">node.kubernetes.io/unreachable</span>
+<span class="hljs-attr">  operator:</span> <span class="hljs-string">Exists</span>
+<span class="hljs-attr">  tolerationSeconds:</span> <span class="hljs-number">300</span></code></pre>
+
+<p>防止因为各种原因（网络/存储等），<code>kubelet</code>在<code>ready/notReady</code>间跳变，会瞬间将上面的<code>pod</code>全部驱逐。</p>
+<p><strong>ExtendedResourceToleration</strong></p>
+<p>为拥有扩展资源的节点(如<code>nvidia.com/GPU</code>)打上<code>taint</code>，并给申请该扩展资源的<code>pod</code>打<code>toleration</code>，防止拥有扩展资源的节点被其他普通请求的<code>pod</code>占满。</p>
+<p><strong>PodTolerationRestriction</strong></p>
+<p>检查<code>pod.toleration</code>和<code>namespace</code>是否有冲突，并合并命名空间的默认配置到<code>pod</code>上，命名空间的<code>toleration</code>的通过两个<code>annotation</code>(<code>scheduler.alpha.kubernetes.io/defaultTolerations</code> 和 <code>scheduler.alpha.kubernetes.io/tolerationsWhitelist</code> ) 进行标记。没有想到啥使用场景，可能用于对某些<code>namespace</code>自动打<code>toleration</code>？</p>
+<p><strong>NamespaceAutoProvision</strong></p>
+<p>自动创建资源中要求的但不存在的<code>namespace</code>。</p>
+<p><strong>NamespaceExists</strong></p>
+<p>强制校验资源中要求的<code>namespace</code>存在。</p>
+<p><strong>NamespaceLifecycle</strong></p>
+<p>保证删除<code>namespace</code>时不允许继续往其下面创建资源；不允许资源指定不存在的<code>namespace</code>；保证三个默认命名空间<code>default / kube-system / kub-plublic</code>存在，即禁止删除它们。</p>
+<p><strong>EventRateLimit</strong> [alpha]</p>
+<pre><code class="hljs bash">kube-apiserver --<span class="hljs-built_in">enable</span>-admission-plugins=EventRateLimit --admission-control-config-file=<span class="hljs-variable">$&#123;ADMISSION_CONTROL_CONFIG_FILE&#125;</span></code></pre>
+
+<p>简单而言，通过以上配置来控制事件的速率，防止由于事件的请求过大压垮整个集群。当前允许的控制级别有</p>
+<ul>
+<li>集群</li>
+<li>单个<code>namespace</code></li>
+<li>单个用户</li>
+<li>特定来源</li>
+</ul>
+<p>详见 <a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/admission_control_event_rate_limit.md" target="_blank" rel="noopener">Admission control plugin: EventRateLimit</a></p>
+<h2 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h2><p><strong>LimitPodHardAntiAffinityTopology</strong></p>
+<p>对于所有<code>pod</code>的<code>requiredDuringSchedulingRequiredDuringExecution</code>策略，只允许<code>kubernetes.io/hostname</code>此<code>key</code>值，不允许反亲和其他标签。没啥想法，可能利于防止反亲和的策略过复杂对调度效率产生影响。</p>
+<p><strong>NodeRestriction</strong></p>
+<p>在<code>--authorization-mode=Node</code>之上，继续缩小<code>system:node</code>的权限。主要为</p>
+<ul>
+<li>只允许修改此<code>system:node:&lt;node-name&gt;</code>管理的<code>node</code>及<code>pod</code>（但不限制读）</li>
+<li><code>update</code>时禁止增加或修改<code>node</code>的<code>taint</code></li>
+<li>除以下系统定义的<code>label</code>域外，禁止修改或增加这三个头域的标签 <code>.*node-restriction.kubernetes.io/</code>，<code>.*kubernetes.io/</code>，<code>.*k8s.io/</code><ul>
+<li>值得注意的是，在<code>create</code>时，这个行为只会被<code>klog.Warning</code>后放行；但在<code>update</code>时，这个行为会被拒绝</li>
+</ul>
+</li>
+</ul>
+<pre><code class="hljs go"><span class="hljs-comment">// white list label</span>
+<span class="hljs-comment">// plugin/pkg/admission/noderestriction/admission.go#L445-L464</span>
+kubernetes.io/hostname
+failure-domain.beta.kubernetes.io/zone
+failure-domain.beta.kubernetes.io/region
+beta.kubernetes.io/instance-<span class="hljs-keyword">type</span>
+beta.kubernetes.io/os
+beta.kubernetes.io/arch
+
+failure-domain.kubernetes.io/zone
+failure-domain.kubernetes.io/region
+kubernetes.io/instance-<span class="hljs-keyword">type</span>
+kubernetes.io/os
+kubernetes.io/arch
+
+kubelet.kubernetes.io/.*
+node.kubernetes.io/.*</code></pre>
+
+<p>详见 <a href="https://kubernetes.io/docs/reference/access-authn-authz/node/" target="_blank" rel="noopener">Using Node Authorization</a></p>
+<p><strong>PodNodeSelector</strong></p>
+<p>自动为<code>pod</code>补<code>nodeSelector</code>，拒绝不合法的<code>nodeSelector</code>。用于多租场景下，限制某个<code>namespace</code>下的资源只允许在某些<code>node</code>上，即节点的独立性，比如生产环境和测试环境隔离，或者价值高的节点限制普通用户的<code>pod</code>瞎调。</p>
+<p>可参考 <a href="https://www.mgasch.com/post/podnodesel/" target="_blank" rel="noopener">Understanding and using the Kubernetes PodNodeSelector Admission Controller</a></p>
+<p><strong>Priority</strong></p>
+<p>检查<code>pod</code>创建时指定的<code>priorityClassName</code>存在。</p>
+<h2 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h2><p><strong>DefaultStorageClass</strong></p>
+<p>为<code>pvc</code>配置默认的<code>storageclass</code>类型。</p>
+<p><strong>StorageObjectInUseProtection</strong></p>
+<p>给<code>pv / pvc</code>增加<code>annotation</code>，在其删除时增加<code>finalize</code>。</p>
+<p><strong>PersistentVolumeClaimResize</strong></p>
+<p>需要打开这个<code>--feature-gates=ExpandPersistentVolumes=true</code>，若<code>PersistentVolumeClaim</code>的<code>StorageClass</code>不允许扩容(<code>allowVolumeExpansion: fasle</code>)，阻止相关操作。</p>
+<h2 id="多租"><a href="#多租" class="headerlink" title="多租"></a>多租</h2><p><strong>AlwaysPullImages</strong></p>
+<p>强行更新所有<code>pod.container</code>的<code>imagePullPolicy</code>为<code>Always</code>。适用于多租场景，防止租户通过镜像名使用节点上已有的其他租户镜像。</p>
+<p><strong>ImagePolicyWebhook</strong></p>
+<p>外注册类型的钩子，需要一个外部的<code>webhook</code>，任何<code>annotation</code>为<code>*.image-policy.k8s.io/*</code>的<code>pod</code>都会确认一遍这个镜像是否允许被使用。没有联想到什么使用场景。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p><strong>PodPreset</strong> [alpha]</p>
+<p>与<code>PodPreset</code>配套使用，按照预置信息填充<code>pod</code>。<code>PodPreset</code>是<code>kubernetes</code>的一种资源，可视为一个模板，通过<code>label</code>与<code>pod</code>相关联，用于自动补全<code>pod</code>的相关信息。</p>
+<p>详见 <a href="https://kubernetes.io/docs/tasks/inject-data-application/podpreset/" target="_blank" rel="noopener">Inject Information into Pods Using a PodPreset</a></p>
+<h2 id="资源限制"><a href="#资源限制" class="headerlink" title="资源限制"></a>资源限制</h2><p><strong>LimitRanger</strong></p>
+<p>与<code>LimitRange</code>配套使用，检查是否满足其资源限制。<code>LimitRange</code>是<code>kubernetes</code>中资源的一种，用于限制单个<code>Pod/Container/PersistentVolumeClaim</code>的资源请求，可用于以下场景</p>
+<ul>
+<li>配置默认的<code>limit</code>或<code>request</code></li>
+<li>限制资源<code>limit</code>最大值</li>
+<li>限制资源<code>limit</code>最小值</li>
+<li>限制资源最大的 <code>limit/request</code> 比率</li>
+</ul>
+<p><strong>ResourceQuota</strong></p>
+<p>与<code>resourceQuota</code>配套使用，检查要求资源未超过限制。</p>
+<p>详见 <a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/resource-management/admission_control_resource_quota.md" target="_blank" rel="noopener">Admission control plugin: ResourceQuota</a></p>
+<h2 id="权限限制"><a href="#权限限制" class="headerlink" title="权限限制"></a>权限限制</h2><p><strong>OwnerReferencesPermissionEnforcement</strong></p>
+<p>修改<code>metadata.ownerReferences</code>需要<code>delete</code>权限。</p>
+<p><strong>PodSecurityPolicy</strong></p>
+<p>与<code>PodSecurityPolicies</code>配套使用，对<code>pod</code>策略进行校验。<code>PodSecurityPolicies</code>是<code>kubernetes</code>的一种资源，用于限制容器中的特殊权限，必须关联到<code>Role/ClusterRole</code>上，并绑定到对应用户才能发挥功能。</p>
+<pre><code class="hljs yaml"><span class="hljs-attr">rules:</span>
+<span class="hljs-attr">- apiGroups:</span> <span class="hljs-string">['policy']</span>
+<span class="hljs-attr">  resources:</span> <span class="hljs-string">['podsecuritypolicies']</span>
+<span class="hljs-attr">  verbs:</span>     <span class="hljs-string">['use']</span></code></pre>
+
+<p>详见 <a href="https://kubernetes.io/docs/concepts/policy/pod-security-policy/" target="_blank" rel="noopener">Pod Security Policies</a></p>
+<p><strong>SecurityContextDeny</strong></p>
+<p>拒绝任何<code>pod</code>的提权操作（指获取更高的权限），社区的建议是如果集群没有通过<code>PodSecurityPolicy</code>进行权限管理则应该开启。</p>
+<p><strong>ServiceAccount</strong></p>
+<p>根据<code>ServiceAccountName</code>补全相关信息</p>
+<h2 id="动态"><a href="#动态" class="headerlink" title="动态"></a>动态</h2><p><strong>MutatingAdmissionWebhook</strong></p>
+<p>串行调用，允许修改内容</p>
+<p><strong>ValidatingAdmissionWebhook</strong></p>
+<p>并行调用，不允许修改其内容</p>
+<h1 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h1><p><a href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/" target="_blank" rel="noopener">kubernetes-Using Admission Controllers</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/kubernetes/">kubernetes</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/20/max_matrix_sum/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">最大矩阵和问题</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    document.addEventListener('DOMContentLoaded', function() {
+      window.NProgress && window.NProgress.inc();
+    })
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      var inputArea = document.querySelector("#local-search-input");
+      inputArea.onclick = function () {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+        this.onclick = null
+      }
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
